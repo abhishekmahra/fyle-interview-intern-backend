@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  flask-app:
+    build: .
+    container_name: flask_app
+    command: gunicorn -c gunicorn_config.py core.server:app
+    ports:
+      - "7755:7755"
+    environment:
+      FLASK_APP: core/server.py
+    volumes:
+      - .:/app           
+      - ./data:/app/data  
+    networks:
+      - flask_network
+
+  migrations:
+    build: .
+    container_name: flask_migrations
+    command: flask db upgrade -d core/migrations/
+    depends_on:
+      - flask-app
+    networks:
+      - flask_network
+
+volumes:
+  sqlite_data:
+
+networks:
+  flask_network:
+    driver: bridge
