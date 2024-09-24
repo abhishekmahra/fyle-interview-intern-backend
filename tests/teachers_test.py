@@ -42,6 +42,8 @@ def test_grade_assignment_cross(client, h_teacher_2):
     data = response.json
 
     assert data['error'] == 'FyleError'
+    assert data['message'] == 'This assignment was not submitted to you'
+
 
 
 def test_grade_assignment_bad_grade(client, h_teacher_1):
